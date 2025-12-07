@@ -1,0 +1,147 @@
+<!-- Header -->
+<div class="bg-neutral-700 text-white px-6 py-3 flex justify-between items-center">
+  <div class="text-sm font-medium">Efact-DEV</div>
+  <div class="flex items-center gap-4">
+    <button
+      (click)="showHelp()"
+      class="text-sm hover:text-stone-300 transition-colors cursor-pointer"
+      title="Obtener ayuda"
+    >
+      ¿Necesita ayuda?
+    </button>
+  </div>
+</div>
+
+<!-- Navbar -->
+<div class="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
+  <!-- Logo -->
+  <h1 class="text-2xl font-bold text-stone-800"><span class="text-red-600">e</span>fact</h1>
+
+  <!-- Menú de navegación -->
+  <nav
+    class="flex gap-6 text-sm text-stone-400 font-semibold *:hover:text-stone-900 *:cursor-pointer *:transition-colors"
+  >
+    <button (click)="showUpcoming()">Crear Comprobante</button>
+    <button (click)="showUpcoming()">Comprobantes Enviados</button>
+    <button (click)="showUpcoming()">Comprobantes Recibidos</button>
+    <button (click)="showUpcoming()">Reportes</button>
+    <button (click)="showUpcoming()">Ítems</button>
+    <button (click)="showUpcoming()">Cobranzas</button>
+    <button (click)="showUpcoming()">Otros</button>
+  </nav>
+
+  <!-- Usuario y logout -->
+  <div class="flex items-center gap-4 *:cursor-pointer">
+    <button (click)="showUpcoming()" class="text-sm text-gray-600">👤 Usuario</button>
+    <button
+      (click)="logout()"
+      class="text-sm text-red-500 hover:text-red-700 transition-colors font-medium"
+    >
+      Cerrar sesión
+    </button>
+  </div>
+</div>
+
+<!-- Contenedor -->
+<div class="max-w-7xl mx-auto mt-12 flex flex-col px-4 gap-4">
+  <!-- Tabs y botones -->
+  <div class="">
+    <div class="flex justify-between items-center">
+      <!-- Tabs -->
+      <div class="flex gap-2 *:cursor-pointer *:px-6 *:py-2 *:rounded-lg font-medium">
+        @for (tab of tabs; track tab.id) {
+        <button
+          (click)="setActiveTab(tab.id)"
+          [class]="
+            activeTab === tab.id
+              ? 'bg-cyan-400 text-stone-50'
+              : 'bg-neutral-200 text-neutral-600 hover:bg-neutral-300'
+          "
+        >
+          {{ tab.label }}
+        </button>
+        }
+      </div>
+
+      <!-- Botones de visualización y descarga -->
+      @if (activeTab === 'documento') {
+      <div class="flex gap-2 text-stone-50 font-medium">
+        @for (doc of documentTypes; track doc.type) {
+        <div class="flex gap-0.5 rounded-lg overflow-hidden *:cursor-pointer">
+          <button
+            (click)="loadDocument(doc.type)"
+            [class]="doc.color + ' px-4 py-2 transition-colors text-sm'"
+            [title]="'Ver ' + doc.label"
+          >
+            {{ doc.label }}
+          </button>
+          <button
+            (click)="downloadFile(doc.type)"
+            [class]="doc.color + ' px-3 py-2 transition-colors text-sm'"
+            [title]="'Descargar ' + doc.label"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+              />
+            </svg>
+          </button>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  @if (activeTab === 'documento') {
+  <!-- Visor de documentos -->
+  <div class="">
+    <!-- Carga -->
+    @if (isLoading) {
+    <div class="flex justify-center items-center h-96">
+      <div class="text-gray-600 text-lg">Cargando documento...</div>
+    </div>
+    <!-- Error -->
+    } @else if (errorMessage) {
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+      {{ errorMessage }}
+    </div>
+    } @else {
+    <!-- Visor de PDF -->
+    @if (currentDocType === 'pdf' && pdfUrl) {
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden" style="height: calc(100vh - 250px)">
+      <iframe [src]="pdfUrl" class="w-full h-full" frameborder="0"></iframe>
+    </div>
+    }
+    <!-- Visor de XML o CDR -->
+    @if ((currentDocType === 'xml' || currentDocType === 'cdr') && textContent) {
+    <div class="bg-white rounded-lg shadow-lg p-6" style="height: calc(100vh - 250px)">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-gray-800">
+          {{ currentDocType === 'xml' ? 'Archivo XML' : 'Archivo CDR' }}
+        </h3>
+      </div>
+      <pre
+        class="bg-gray-50 p-4 rounded border border-gray-200 overflow-auto text-sm"
+        style="max-height: calc(100vh - 350px)"
+      ><code>{{ textContent }}</code></pre>
+    </div>
+    } }
+  </div>
+  } @else {
+  <!-- Tabs inactivos -->
+  <div class="bg-white rounded-lg p-12 text-center">
+    <p class="text-gray-600 text-lg">Esta sección está en desarrollo</p>
+  </div>
+  }
+</div>

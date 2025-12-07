@@ -1,0 +1,74 @@
+<!-- Contenedor -->
+<div class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+  <!-- Tarjeta -->
+  <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">eFact</h1>
+      <p class="text-gray-600 mt-2">Sistema de Facturación Electrónica</p>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Usuario -->
+      <div class="mb-4">
+        <label for="username" class="block text-gray-700 font-medium mb-2"> Usuario (RUC) </label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          placeholder="Ingrese su RUC"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [class.border-red-500]="
+            loginForm.get('username')?.invalid && loginForm.get('username')?.touched
+          "
+        />
+      </div>
+
+      <!-- Contraseña -->
+      <div class="mb-6">
+        <label for="password" class="block text-gray-700 font-medium mb-2"> Contraseña </label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Ingrese su contraseña"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 break-all"
+          [class.border-red-500]="
+            loginForm.get('password')?.invalid && loginForm.get('password')?.touched
+          "
+        />
+      </div>
+
+      <!-- Error -->
+      @if (errorMessage) {
+      <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+        {{ errorMessage }}
+      </div>
+      }
+
+      <!-- Botón -->
+      <button
+        type="submit"
+        [disabled]="isLoading"
+        class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+      >
+        @if (isLoading) {
+        <span>Iniciando sesión...</span>
+        } @else {
+        <span>Iniciar Sesión</span>
+        }
+      </button>
+    </form>
+
+    <!-- Datos de prueba -->
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
+      <p class="font-medium mb-2">Credenciales de prueba:</p>
+      <p><strong>Usuario:</strong> 20111193035</p>
+      <p class="break-all">
+        <strong>Contraseña:</strong>
+        61a77b6fda77c3a2d6b28930546c86d7f749ccf0bd4bad1e1192f13bb59f0f30
+      </p>
+    </div>
+  </div>
+</div>
